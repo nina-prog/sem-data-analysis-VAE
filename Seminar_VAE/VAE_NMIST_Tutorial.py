@@ -130,9 +130,6 @@ vae = tf.keras.models.Model(vae_input, vae_decoder_output, name="VAE")
 
 vae.summary()
 
-# Compile VAE
-vae.compile(optimizer=tf.keras.optimizers.Adam(lr=0.0005), loss=loss_func(encoder_mu, encoder_log_variance))
-
 # Loss Function Implementation
 def loss_func(encoder_mu, encoder_log_variance):
     def vae_reconstruction_loss(y_true, y_predict):
@@ -156,6 +153,9 @@ def loss_func(encoder_mu, encoder_log_variance):
         return loss
 
     return vae_loss
+
+# Compile VAE
+vae.compile(optimizer=tf.keras.optimizers.Adam(lr=0.0005), loss=loss_func(encoder_mu, encoder_log_variance))
 
 
 ########################
