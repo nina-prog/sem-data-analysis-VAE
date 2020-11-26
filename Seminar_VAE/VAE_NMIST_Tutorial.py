@@ -5,7 +5,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 ##########################################################################################
 # IN THE FOLLOWING WE DO THE PAPERSPACE VAE TUTORIAL ON MNIST NUMBER DATASET #
-# (Use Juypter Notebook for step to step learning) #
+# (Use Google Colab Notebook with Hardware Enhancer GPU (Edit > Notebook Settings > Hardware Accelerator > GPU) #
 # Link: https://blog.paperspace.com/how-to-build-variational-autoencoder-keras/
 ##########################################################################################
 # Code can be splitted into the following sections:
