@@ -1,0 +1,43 @@
+# User-specific IDE stuff
+.idea/
+
+# Jupiter Notebooks
+.ipynb_checkpoints
+Untitled.ipynb
+
+# Default ignored files -- optional
+/workspace.xml
+
+# Unit test / coverage reports -- optional
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Distribution / packaging -- optional
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Byte-compiled / optimized / DLL files -- optional
+__pycache__/
+*.py[cod]
+*$py.class
