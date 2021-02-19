@@ -19,7 +19,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Bidirectional, Dropout, Reshape, Flatten
-from tensorflow.keras.visualize_util import plot_model
+# from tensorflow.keras.visualize_util import plot_model
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
@@ -144,7 +144,7 @@ class Sampling(layers.Layer):
 """
 
 
-def create_encoder(intermediate_dim=140, latent_dim=5, dropout_rate=0.2, regulazier_rate=0.004):
+def create_encoder(intermediate_dim=140, latent_dim=5, dropout_rate=0.2, regularizer_rate=0.004):
     """Maps ECG5000 time series to a triplet (z_mean, z_log_var, z)."""
 
     ### Define Layers
@@ -153,8 +153,8 @@ def create_encoder(intermediate_dim=140, latent_dim=5, dropout_rate=0.2, regulaz
     encoded = Bidirectional(LSTM(intermediate_dim, activation='tanh', name=''), name='Encode_1')(encoder_inputs)
     # encoded = Flatten()(encoded), LSTM return_sequence=True
     encoded = Dropout(dropout_rate, name='Dropout_1')(encoded)
-    encoded = Dense(latent_dim, activation='tanh', name='Encode_2', kernel_regularizer=l2(regulazier_rate),
-                    activity_regularizer=l2(regulazier_rate))(encoded)
+    encoded = Dense(latent_dim, activation='tanh', name='Encode_2', kernel_regularizer=l2(regularizer_rate),
+                    activity_regularizer=l2(regularizer_rate))(encoded)
 
     z_mean = Dense(latent_dim, activation='softplus', name="z_mean")(encoded)
     z_log_var = Dense(latent_dim, activation='softplus', name="z_log_var")(encoded)
@@ -166,22 +166,22 @@ def create_encoder(intermediate_dim=140, latent_dim=5, dropout_rate=0.2, regulaz
     return encoder
 
 
-### Check if encoder works
-encoder_test = create_encoder()
-encoder_test.summary()
+# ### Check if encoder works
+# encoder_test = create_encoder()
+# encoder_test.summary()
 
 """## Decoder"""
 
 
 def create_decoder(encoding_dim=140, intermediate_dim=140, latent_dim=5, dropout_rate=0.2,
-                   regulazier_rate=0.004):
+                   regularizer_rate=0.004):
     """Converts z, the encoded time series, back into a readable time series."""
 
     ### Define Layers
     latent_inputs = keras.Input(shape=(latent_dim,), name='Decoder_Input_layer')
 
-    decoded = Dense(encoding_dim * 256, activation='tanh', name='Decode_1', kernel_regularizer=l2(regulazier_rate),
-                    activity_regularizer=l2(regulazier_rate))(latent_inputs)
+    decoded = Dense(encoding_dim * 256, activation='tanh', name='Decode_1', kernel_regularizer=l2(regularizer_rate),
+                    activity_regularizer=l2(regularizer_rate))(latent_inputs)
     decoded = Reshape((140, 256), name='Decode_2')(decoded)
     decoded = Dropout(dropout_rate, name='Dropout_1')(decoded)
     decoded = Bidirectional(LSTM(intermediate_dim, activation='tanh', return_sequences=True, name=''), name='Decode_3')(
@@ -195,9 +195,9 @@ def create_decoder(encoding_dim=140, intermediate_dim=140, latent_dim=5, dropout
     return decoder
 
 
-### Check if decoder works
-decoder_test = create_decoder()
-decoder_test.summary()
+# ### Check if decoder works
+# decoder_test = create_decoder()
+# decoder_test.summary()
 
 """## VAE
 
@@ -262,16 +262,16 @@ class VAE(keras.Model):
 
 
 ### Define function to create model
-def create_model(intermediate_dim=140, dropout_rate=0.2, regulazier_rate=0.004, optimizer='adam', learn_rate=0.001,
+def create_model(intermediate_dim=140, dropout_rate=0.2, regularizer_rate=0.004, optimizer='adam', learn_rate=0.001,
                  name='VAE'):
     """Creates VAE model, required for wrapping in estimator interface KerasRegressor, while accepting the hyperparameters we want to tune. We also pass some default values."""
 
     # create encoder 
     encoder = create_encoder(intermediate_dim=intermediate_dim, dropout_rate=dropout_rate,
-                             regulazier_rate=regulazier_rate)
+                             regularizer_rate=regularizer_rate)
     # create decoder 
     decoder = create_decoder(intermediate_dim=intermediate_dim, dropout_rate=dropout_rate,
-                             regulazier_rate=regulazier_rate)
+                             regularizer_rate=regularizer_rate)
     # create vae
     model = VAE(encoder, decoder, name=name)
     # compile model
@@ -291,11 +291,11 @@ vae = create_model(name='VAE')
 ### Display VAE model and it`s parts
 # encoder 
 vae.encoder.summary(line_length=100)
-plot_model(vae.encoder, show_shapes=True, to_file='vae_encoder.png')
+# plot_model(vae.encoder, show_shapes=True, to_file='vae_encoder.png')
 print("\n")
 # decoder
 vae.decoder.summary(line_length=100)
-plot_model(vae.decoder, show_shapes=True, to_file='vae_decoder.png')
+# plot_model(vae.decoder, show_shapes=True, to_file='vae_decoder.png')
 print("\n")
 # vae
 vae.summary(line_length=100)
@@ -544,7 +544,7 @@ space = {
     'optimizer': ['adam', 'SGD'],
     'batch_size': list(np.logspace(0, 6, 7, base=2, dtype=int)),
     'dropout_rate': list(np.linspace(0, 1)),
-    'regulazier_rate': list(np.logspace(-6, -1, 6)),
+    'regularizer_rate': list(np.logspace(-6, -1, 6)),
     'learn_rate': list(np.logspace(np.log10(0.005), np.log10(0.5), base=10, num=100)),
 }
 
