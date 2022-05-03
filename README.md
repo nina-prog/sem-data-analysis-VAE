@@ -1,4 +1,4 @@
-# DataAnalysis_VAE
+# sem-data-analysis-VAE
 
 Creating a Variational Auto Encoder (VAE) for the FZI seminar.
 
